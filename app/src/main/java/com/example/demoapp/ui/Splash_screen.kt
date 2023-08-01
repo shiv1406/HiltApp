@@ -15,11 +15,10 @@ class Splash_screen : AppCompatActivity() {
 
         val handler = Handler()
         handler.postDelayed({
-
             startActivity(Intent(this, MainActivity::class.java))
         }, 1000)
 
-        //onBackPressed()
+
     }
 
     override fun onBackPressed() {

@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.employee_item.view.*
 
 class EmployeeAdapter: RecyclerView.Adapter<EmployeeAdapter.EmployeeViewHolder>(){
 
+    private var fullList= listOf<Employee>()
     inner class EmployeeViewHolder(itemView:View):RecyclerView.ViewHolder(itemView)
 
     private val diffCallback = object : DiffUtil.ItemCallback<Employee>(){
@@ -26,7 +27,24 @@ class EmployeeAdapter: RecyclerView.Adapter<EmployeeAdapter.EmployeeViewHolder>(
 
     private val differ = AsyncListDiffer(this,diffCallback)
 
-    fun submitList(list: List<Employee>) = differ.submitList(list)
+    fun submitList(list: List<Employee>) {
+        fullList=list
+        return differ.submitList(list)
+    }
+    fun filterList(constraint:String){
+        val filteredList= arrayListOf<Employee>()
+        filteredList.clear()
+        if(constraint.isEmpty()){
+            return differ.submitList(fullList)
+        }
+        for(singleItem in fullList) {
+            val filterPattern = constraint.toLowerCase().trim()
+            if(singleItem.employee_name?.toLowerCase()!!.contains(filterPattern)){
+                filteredList.add(singleItem)
+            }
+        }
+        return differ.submitList(filteredList)
+    }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): EmployeeViewHolder {
         return EmployeeViewHolder(
@@ -55,4 +73,5 @@ class EmployeeAdapter: RecyclerView.Adapter<EmployeeAdapter.EmployeeViewHolder>(
         }
 
     }
+
 }
